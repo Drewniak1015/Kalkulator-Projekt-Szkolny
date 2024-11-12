@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kalkulator</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="Box">
+      <div class="DisplayAction" id="DisplayAction"></div>
+      <div class="buttons" id="buttons"></div>
+    </div>
+    <script>
+      let obliczenie = "";
+      const displayAction = document.getElementById("DisplayAction");
+      const buttons = document.getElementById("buttons");
+      const arrayButtons = [
+        "+",
+        7,
+        8,
+        9,
+        "-",
+        4,
+        5,
+        6,
+        "*",
+        1,
+        2,
+        3,
+        "/",
+        0,
+        ".",
+        "=",
+        "C",
+      ];
+      const CreateButtons = () => {
+        arrayButtons.forEach((element) => {
+          const NewButton = document.createElement("button");
+          NewButton.innerText = element;
+          NewButton.className = "grid-item";
+          buttons.appendChild(NewButton);
+          NewButton.addEventListener("click", () => GetValue(element));
+        });
+      };
+      const operators = ["+", "-", "*", "/", ".", "="];
+      let lastChar;
+      const GetValue = (value) => {
+        if (obliczenie === "" && operators.includes(value)) {
+          return;
+        }
+
+        if (operators.includes(value) && operators.includes(lastChar)) {
+          obliczenie = obliczenie.slice(0, -1);
+          if (value == "=") {
+            obliczenie = String(eval(obliczenie));
+            if (obliczenie === "Infinity" || obliczenie === "-Infinity") {
+              obliczenie = "Błąd: dzielenie przez zero!";
+            }
+            lastChar = obliczenie;
+            return (displayAction.innerText = obliczenie);
+          }
+          obliczenie += value;
+          displayAction.innerText = obliczenie;
+          return;
+        } else if (value == "C") {
+          obliczenie = "";
+          lastChar = "";
+          return (displayAction.innerText = obliczenie);
+        } else if (value == "=") {
+          if (obliczenie.includes("/0")) {
+            obliczenie = "";
+            return (displayAction.innerText = "Błąd: dzielenie przez zero!");
+          } else {
+            obliczenie = String(eval(obliczenie));
+          }
+          lastChar = obliczenie;
+          return (displayAction.innerText = obliczenie);
+        } else {
+          obliczenie += value;
+          lastChar = value;
+          return (displayAction.innerText = obliczenie);
+        }
+        lastChar = value;
+      };
+      CreateButtons();
+    </script>
+  </body>
+</html>
